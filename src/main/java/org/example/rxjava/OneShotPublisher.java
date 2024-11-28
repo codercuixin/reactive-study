@@ -1,7 +1,4 @@
-package org.example;
-
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+package org.example.rxjava;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Flow;

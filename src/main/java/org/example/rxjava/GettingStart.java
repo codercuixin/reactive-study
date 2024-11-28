@@ -1,4 +1,4 @@
-package org.example;
+package org.example.rxjava;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
