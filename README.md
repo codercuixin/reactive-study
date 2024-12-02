@@ -4,29 +4,30 @@ reactive stream：asynchronous stream processing with non-blocking backpressure.
 [官网](https://www.reactive-streams.org/)
 
 [规范](https://github.com/reactive-streams/reactive-streams-jvm)
-#### Key Concepts
-Reactive Streams:
-The reactive streams specification defines how to handle asynchronous stream processing with non-blocking backpressure. 
-It consists of four key interfaces: Publisher, Subscriber, Subscription, and Processor.
-1. Publisher: 
-A Publisher sends data to subscribers. 
-It has the responsibility to manage how much data it sends based on the subscriber's capacity to handle it.
-2. Subscriber:
-A Subscriber receives data from the Publisher. 
-It can request a specific number of items to be sent (using the request(n) method) or cancel the subscription.
-3. Subscription:
-This interface connects a Publisher and a Subscriber. It allows the subscriber to control the flow of data by requesting a certain number of items or canceling the subscription.
-4. Processor:
-   Processor is a component that acts as both a Publisher and a Subscriber. This allows it to receive data from a Publisher, process that data, and then publish the processed data to one or more Subscribers.
+#### 核心概念
+响应式流规范定义了如何处理非阻塞的异步流处理，使用非阻塞的背压机制。
+它由四个关键接口组成：Publisher（发布者）、Subscriber（订阅者）、Subscription（订阅）和 Processor（处理器）。
 
-#### How Backpressure Works
-1. Demand Management: The subscriber can request a certain amount of data from the producer based 
-on its processing capacity. For example, a subscriber might request 10 items at a time.
-2. Flow Control: If a subscriber is slow to process data, it can request fewer items or stop requesting altogether. 
-This signals the publisher to slow down data emission.
-3. Buffering and Dropping: Depending on the implementation, a publisher might buffer data until the consumer can handle it. 
-Alternatively, it might drop excess data if it exceeds a certain limit (though this can lead to data loss).
+1. **Publisher（发布者）**：
+   - 发布者向订阅者发送数据。
+   - 它负责管理发送的数据量，基于订阅者处理数据的能力。
 
+2. **Subscriber（订阅者）**：
+   - 订阅者从发布者接收数据。
+   - 它可以请求发送特定数量的项目（使用 `subscription.request(n)` 方法）或取消订阅。
+
+3. **Subscription（订阅）**：
+   - 该接口连接发布者和订阅者。
+   - 它允许订阅者通过请求一定数量的项目或取消订阅来控制数据流。
+
+4. **Processor（处理器）**：
+   - 处理器是一个同时充当发布者和订阅者的组件。
+   - 这使得它能够从发布者接收数据，处理这些数据，然后将处理后的数据发布给一个或多个订阅者。
+
+#### 背压的工作原理
+1. 需求管理：订阅者可以根据其处理能力请求一定量的数据。例如，订阅者可能一次请求 10 个项目。
+2. 流控制：如果订阅者处理数据的速度较慢，它可以请求更少的项目或停止请求。这向发布者发出信号，要求其减缓数据的发送速度。
+3. 缓冲和丢弃：根据实现，发布者可能会缓冲数据，直到消费者能够处理为止。或者，如果数据超出某个限制，它可能会丢弃多余的数据（尽管这可能导致数据丢失）。
 ### 介绍 Java 9 Flow API
 https://mrbird.cc/Java-9-Flow-API-Learn.html
 
@@ -64,6 +65,7 @@ Use Cases: Suitable for a wide range of applications, including Android developm
 
 ### Reactor vs RxJava
 如果是后端的话，更建议学 Reactor。
+[边学边练](https://github.com/reactor/lite-rx-api-hands-on)
 Target Audience: Reactor is more focused on Spring developers and server-side applications, 
 while RxJava is broader and caters to various Java applications, including Android.
 
@@ -96,3 +98,7 @@ The key expected benefit of reactive and non-blocking is the ability to scale wi
 In Spring MVC (and servlet applications in general), it is assumed that applications can block the current thread, (for example, for remote calls). For this reason, servlet containers use a large thread pool to absorb potential blocking during request handling.
 
 In Spring WebFlux (and non-blocking servers in general), it is assumed that applications do not block. Therefore, non-blocking servers use a small, fixed-size thread pool (event loop workers) to handle requests.
+
+### todo
+https://projectreactor.io/docs/core/release/reference/reactiveProgramming.html
+https://docs.spring.io/spring-framework/reference/web/webflux-webclient.html
