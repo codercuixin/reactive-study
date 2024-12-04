@@ -50,6 +50,9 @@ https://juejin.cn/post/7104961299670368264
 ### reactor
 https://github.com/reactor/reactor
 [边学边练](https://github.com/reactor/lite-rx-api-hands-on)
+
+[官方文档](https://projectreactor.io/docs/core/release/reference/aboutDoc.html)
+
 和 Spring 深度继承，Spring 的 WebFlux 就在它的基础上实现。
 1. Flux: 0..N 个项的反应序列；可组合；丰富的 Operator;实现了 Reactive Stream 的 Publisher 接口
 ![flux](images/flux.png)
@@ -115,7 +118,3 @@ The key expected benefit of reactive and non-blocking is the ability to scale wi
 In Spring MVC (and servlet applications in general), it is assumed that applications can block the current thread, (for example, for remote calls). For this reason, servlet containers use a large thread pool to absorb potential blocking during request handling.
 
 In Spring WebFlux (and non-blocking servers in general), it is assumed that applications do not block. Therefore, non-blocking servers use a small, fixed-size thread pool (event loop workers) to handle requests.
-
-### todo
-https://projectreactor.io/docs/core/release/reference/reactiveProgramming.html
-https://docs.spring.io/spring-framework/reference/web/webflux-webclient.html
