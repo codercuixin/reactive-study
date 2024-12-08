@@ -47,8 +47,7 @@ https://mrbird.cc/Java-9-Flow-API-Learn.html
 
 https://juejin.cn/post/7104961299670368264
 
-### reactor
-https://github.com/reactor/reactor
+### [reactor](https://github.com/reactor/reactor)
 [边学边练](https://github.com/reactor/lite-rx-api-hands-on)
 
 [官方文档](https://projectreactor.io/docs/core/release/reference/aboutDoc.html)
@@ -59,26 +58,30 @@ https://github.com/reactor/reactor
 
 2. Mono：表示单值或空（0..1）；可组合；丰富的 Operator;实现了 Reactive Stream 的 Publisher 接口
 ![mono](images/mono.png)
-### RxJava
-RxJava (https://github.com/ReactiveX/RxJava)
+### [RxJava](https://github.com/ReactiveX/RxJava)
+#### 概述
+RxJava 是一个用于在 Java 虚拟机上通过可观察序列组合异步和基于事件的程序的库。
 
-Overview: RxJava is a library for composing asynchronous and event-based programs using observable sequences for the Java VM.
-Key Features:
-Extends the observer pattern to support sequences of data/events.
-Provides a rich set of operators to compose and transform data flows.
-Supports both backpressure (via Flowable) and non-backpressure (via Observable).
-Allows for integration with Java 8+ features and is friendly with Android API.
-Use Cases: Suitable for a wide range of applications, including Android development and Java-based server applications.
+#### 关键特性
+- 扩展了观察者模式，以支持数据/事件序列。
+- 提供丰富的操作符，用于组合和转化数据流。
+- 支持背压（通过 Flowable）和非背压（通过 Observable）。
+- 允许与 Java 8 及以上的特性集成，并与 Android API 兼容。
+
+#### 使用案例
+适用于广泛的应用程序，包括 Android 开发和基于 Java 的服务器应用程序。
 
 ### Reactor vs RxJava
 如果是后端的话，更建议学 Reactor。
-Target Audience: Reactor is more focused on Spring developers and server-side applications, 
-while RxJava is broader and caters to various Java applications, including Android.
+#### 目标受众
+Reactor 更加关注于 Spring 开发人员和服务器端应用程序，而 RxJava 的受众更广泛，适用于各种 Java 应用程序，包括 Android。
 
-Data Types: Reactor uses Mono and Flux, whereas RxJava offers Single, Maybe, Completable, Observable, and Flowable.
+#### 数据类型
+Reactor 使用 Mono 和 Flux，而 RxJava 提供 Single、Maybe、Completable、Observable 和 Flowable。
 
-Concurrency Model: Both libraries support asynchronous processing, 
-but Reactor has a stronger emphasis on integration with project reactor and Spring ecosystem.
+#### 并发模型
+这两个库都支持异步处理，但 Reactor 更加强调与 Project Reactor 和 Spring 生态系统的集成。
+
 
 ### Reactor vs CompletableFuture
 1. Reactor：
@@ -96,15 +99,12 @@ but Reactor has a stronger emphasis on integration with project reactor and Spri
 https://projectreactor.io/docs/core/release/reference/reactiveProgramming.html#asynchronicity-to-the-rescue
 
 ### Spring WebFlux
-The original web framework included in the Spring Framework, Spring Web MVC,
-was purpose-built for the Servlet API and Servlet containers.
-The reactive-stack web framework, Spring WebFlux, was added later in version 5.0. 
-It is fully non-blocking, supports Reactive Streams back pressure, and runs on such servers as Netty, Undertow, and Servlet containers.
+原始的网络框架 Spring Web MVC 是为 Servlet API 和 Servlet 容器专门构建的。
+反应式栈网络框架 Spring WebFlux 在 5.0 版本中后添加。它是完全非阻塞的，支持反应式流的背压，并可以在 Netty、Undertow 和 Servlet 容器等服务器上运行。
 
-Both web frameworks mirror the names of their source modules (spring-webmvc and spring-webflux) 
-and co-exist side by side in the Spring Framework. 
-Each module is optional. Applications can use one or the other module or, 
-in some cases, both — for example, Spring MVC controllers with the reactive WebClient.
+
+这两个网络框架的名称与其源模块（spring-webmvc 和 spring-webflux）相对应，并在 Spring 框架中并存。
+每个模块都是可选的。应用程序可以使用其中一个模块，或者在某些情况下同时使用两个模块，例如，将 Spring MVC 控制器与反应式 WebClient 一起使用。
 
 https://docs.spring.io/spring-framework/reference/web/webflux.html
 https://www.baeldung.com/spring-5-webclient
@@ -112,13 +112,15 @@ https://docs.spring.io/spring-framework/reference/web/webflux-webclient.html
 #### Spring MVC vs Spring WebFlux
 ![Spring MVC vs Spring WebFlux](images/spring-mvc-vs-webflux.png)
 
-If you have a large team, keep in mind the steep learning curve in the shift to non-blocking, functional, and declarative programming. A practical way to start without a full switch is to use the reactive WebClient. Beyond that, start small and measure the benefits. We expect that, for a wide range of applications, the shift is unnecessary. If you are unsure what benefits to look for, start by learning about how non-blocking I/O works (for example, concurrency on single-threaded Node.js) and its effects.
-The key expected benefit of reactive and non-blocking is the ability to scale with a small, fixed number of threads and less memory
+如果您有一个大型团队，请注意转向非阻塞、函数式和声明式编程的陡峭学习曲线。
+一个实用的开始方式是使用反应式 WebClient，而不是完全切换。除此之外，可以从小处着手并衡量收益。我们认为，对于广泛的应用程序来说，这种转变是没有必要的。
 
-In Spring MVC (and servlet applications in general), it is assumed that applications can block the current thread, (for example, for remote calls). For this reason, servlet containers use a large thread pool to absorb potential blocking during request handling.
+如果您不确定要寻找哪些好处，可以先了解非阻塞 I/O 是如何工作的（例如，单线程 Node.js 上的并发）及其影响。
+**反应式和非阻塞的关键预期好处是能够以较小的固定线程数和更少的内存进行扩展。**
 
-In Spring WebFlux (and non-blocking servers in general), it is assumed that applications do not block. Therefore, non-blocking servers use a small, fixed-size thread pool (event loop workers) to handle requests.
+在 Spring MVC（以及一般的 Servlet 应用程序）中，假设应用程序可以阻塞当前线程（例如，用于远程调用）。因此，Servlet 容器使用大型线程池来吸收请求处理期间的潜在阻塞。
 
+在 Spring WebFlux（以及一般的非阻塞服务器）中，假设应用程序不阻塞。因此，非阻塞服务器使用小型固定大小的线程池（事件循环工作线程）来处理请求。
 ### 常见问题
 #### 1.如果之前的项目里面用过 webClient.xx.block() 可能需要更改。
 java.lang.IllegalStateException: block()/blockFirst()/blockLast() are blocking, which is not supported in thread reactor-http-nio-2
