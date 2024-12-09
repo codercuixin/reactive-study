@@ -103,8 +103,42 @@ https://projectreactor.io/docs/core/release/reference/reactiveProgramming.html#a
 反应式栈网络框架 Spring WebFlux 在 5.0 版本中后添加。它是完全非阻塞的，支持反应式流的背压，并可以在 Netty、Undertow 和 Servlet 容器等服务器上运行。
 
 
+响应式（reactive）和非阻塞（non-blocking）编程的主要预期优势，即能够在保持较小、固定的线程数量和较少内存使用的同时进行扩展（scale）。
+这种特性使得应用程序在负载增加时更具弹性，因为它们能够以更可预测的方式进行扩展。
+然而，要观察到这些优势，你需要有一定的延迟，包括混合了慢速和不可预测的网络I/O。在这种情况下，响应式栈开始展现出其优势，而且这种差异可能是显著的。
+
+
 这两个网络框架的名称与其源模块（spring-webmvc 和 spring-webflux）相对应，并在 Spring 框架中并存。
 每个模块都是可选的。应用程序可以使用其中一个模块，或者在某些情况下同时使用两个模块，例如，将 Spring MVC 控制器与反应式 WebClient 一起使用。
+
+#### 并发模型
+在 Spring MVC（以及一般的 Servlet 应用程序）中，假设应用程序可以阻塞当前线程（例如，用于远程调用）。因此，Servlet 容器使用大型线程池来吸收请求处理期间的潜在阻塞。
+
+在 Spring WebFlux（以及一般的非阻塞服务器）中，假设应用程序不阻塞。因此，非阻塞服务器使用小型固定大小的线程池（事件循环工作线程）来处理请求。
+
+##### 如何调用阻塞的 API
+如果确实需要使用阻塞库怎么办？Reactor 和 RxJava 都提供了 `publishOn` 操作符，可以在不同的线程上继续处理。这意味着有一个简单的逃生通道。然而，请记住，阻塞 API 并不适合这种并发模型。
+##### 可变状态
+在 Reactor 和 RxJava 中，您通过操作符声明逻辑。
+在运行时，会形成一个反应式**管道**，数据在不同的阶段按**顺序**处理。这个方法的一个关键好处是，它使应用程序**无需保护可变状态**，因为管道中的应用程序代码不会同时被调用。
+
+#### 线程模型
+在运行 Spring WebFlux 的服务器上，您可以期待看到哪些线程？
+
+1. 在一个“标准”的 Spring WebFlux 服务器上（例如，没有数据访问或其他可选依赖），您可以预计会有一个线程用于服务器，还有若干个线程用于请求处理（通常与 CPU 核心数量相同）。然而，Servlet 容器可能会启动更多线程（例如，在 Tomcat 上默认为 10 个），以支持阻塞 I/O 和 Servlet 3.1（非阻塞）I/O 的使用。
+
+2. 反应式 WebClient 以事件循环的方式运行。因此，您可以看到与此相关的小型固定数量的处理线程（例如，使用 Reactor Netty 连接器时的 reactor-http-nio-）。不过，如果同时在客户端和服务器中使用 Reactor Netty，默认情况下这两者会共享事件循环资源。
+
+3. Reactor 和 RxJava 提供了线程池抽象，称为调度器（schedulers），可以与 publishOn 操作符一起使用，以切换到不同的线程池。调度器的名称通常暗示了特定的并发策略，例如，“parallel”（用于 CPU 密集型工作，线程数量有限）或“elastic”（用于 I/O 密集型工作，线程数量较多）。如果您看到这样的线程，这意味着某些代码正在使用特定的线程池调度策略。
+
+4. 数据访问库和其他第三方依赖也可能会创建和使用它们自己的线程。
+#### 配置
+Spring 框架不提供启动和停止[servers](https://docs.spring.io/spring-framework/reference/web/webflux/new-framework.html#webflux-server-choice)的支持。
+要配置服务器的线程模型，您需要使用特定于服务器的配置 API，或者如果使用 Spring Boot，请查看每个服务器的 Spring Boot 配置选项。
+您可以直接配置 [WebClient](https://docs.spring.io/spring-framework/reference/web/webflux-webclient/client-builder.html)。对于其他库，请参阅它们各自的文档。
+
+
+
 
 https://docs.spring.io/spring-framework/reference/web/webflux.html
 https://www.baeldung.com/spring-5-webclient
